@@ -1,0 +1,36 @@
+# ── Secrets / credentials ──────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*serviceAccountKey*.json
+*service-account*.json
+firebase-adminsdk*.json
+google-credentials*.json
+firestore.rules
+*.pem
+*.key
+ChongReanService/appsettings*.json
+
+# ── .NET (main-service) ────────────────────────────────────────────────
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# ── Docker ──────────────────────────────────────────────────────────────
+docker-compose.override.yml
+
+# ── Editors / IDEs ────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+
+# ── OS ──────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Logs ──────────────────────────────────────────────────────────────
+*.log
+
+
