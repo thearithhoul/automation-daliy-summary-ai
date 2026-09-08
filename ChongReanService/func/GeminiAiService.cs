@@ -9,70 +9,13 @@ namespace ChongReanProject.Func;
 
 public class GeminiAiService
 {
-    private const string DefaultModel = "gemini-3.6-flash";
+    private const string DefaultModel = "gemini-3.8-flash";
 
     // Keep in sync with docs/article-filter-instruction.md - that file is the
     // source of truth for this task's rules; this is its content as the
     // Gemini SystemInstruction for FilterArticle.
     private const string ArticleFilterInstruction = """
-        Task: filter a list of scraped page sections down to only the real
-        articles/content sections, dropping site navigation clusters that got
-        parsed the same way (heading + list of links).
-
-        Input shape (each item in the array you're given):
-            title: string | null
-            subtitle: string | null
-            links: list of { text: string, url: string }
-            metadata: object
-            other: string
-
-        How to tell them apart:
-
-        Primary rule - is this one coherent topic, or a grab-bag of site links?
-        - Real article: the title names a specific topic, and every link is a
-          deeper/related page about that same topic (sub-sections, "read more"
-          links, next steps) - the links read like a table of contents for the
-          title's topic.
-        - Not an article: the title is a generic site section (About, Support,
-          Contact, Sponsors, Team, Legal, Privacy, Community, Resources,
-          footer/utility sections), and the links are unrelated to each other
-          beyond "things in this site area" (e.g. an FAQ, a privacy policy, a
-          YouTube video, and a code of conduct all under "About").
-
-        Supporting hint (not a hard rule) - the `other` field:
-        Non-empty `other` is a mild positive signal, empty is a mild negative
-        signal, but this depends on incidental source-page formatting. Don't
-        reject an otherwise-clearly-real article just because `other` is
-        empty, and don't keep an otherwise-clearly-navigational section just
-        because `other` has text.
-
-        Other supporting signals:
-        - Navigation sections are more likely to mix in an external/social
-          link (YouTube, Twitter, a sponsor site); a real article's links
-          usually stay within the same site/doc section.
-        - A real article set usually comes with several sibling sections at
-          the same heading level; a page-level nav block is often a single
-          isolated section.
-
-        Examples:
-        - NOT an article - "About": links = FAQ, Team, Releases, Community
-          Guide, Code of Conduct, Privacy Policy, The Documentary (YouTube).
-          Why: the links share nothing beyond "stuff under About" - a policy
-          page, a video, a releases page, a contributor guide are not
-          sub-topics of one article.
-        - NOT an article - "Support": links = Sponsor, Partners.
-          Why: two unrelated funding/utility links, not article content.
-        - REAL article - "Scaling Up": links = Single-File Components,
-          Tooling, Routing, State Management, Testing, Server-Side Rendering
-          (SSR). Why: every link is a specific technique for scaling up a Vue
-          app - all sub-topics of exactly what the title describes.
-        - REAL article - "Best Practices": links = Production Deployment,
-          Performance, Accessibility, Security. Why: same pattern - every
-          link is a specific best practice under a title that promises them.
-
-        Output: respond with a single JSON object { "keep_indices": [0, 3, 4] }
-        - the 0-based indices, into the input array, of entries that are real
-        articles. Do not re-emit the article content itself.
+    
         """;
 
     private readonly Client _client;

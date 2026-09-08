@@ -10,7 +10,7 @@ firestore.rules
 *.pem
 *.key
 ChongReanService/appsettings*.json
-
+ChongReanService/Properties/launchSettings.json
 # ── .NET (main-service) ────────────────────────────────────────────────
 bin/
 obj/

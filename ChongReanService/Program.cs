@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using ChongReanProject.Config;
+using ChongReanProject.Domains;
 using ChongReanProject.Func;
 using Google.Cloud.Firestore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -34,6 +35,8 @@ builder.Services.AddSingleton<GeminiAiService>();
 
 builder.Services.Configure<ScrapingServiceSetting>(builder.Configuration.GetSection("ScrapingService"));
 builder.Services.AddHttpClient<ArticleScrapingClient>();
+builder.Services.AddSingleton<KhmerTimeParser>();
+
 
 var jwtSecret = builder.Configuration["Secret"]
     ?? throw new InvalidOperationException("Missing 'Secret' configuration value.");
@@ -86,8 +89,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
 

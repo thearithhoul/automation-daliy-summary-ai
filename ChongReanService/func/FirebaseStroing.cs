@@ -8,6 +8,22 @@ namespace ChongReanProject.Func;
 // control, e.g. Timestamp fields).
 public class FirebaseStroing(FirestoreDb firestoreDb)
 {
+    // Joins alternating collection/document segments into a Firestore collection path,
+    // e.g. SubCollectionPath("collection1", "doc1", "collection2") -> "collection1/doc1/collection2".
+    // Pass the result as the `collection` argument to any method below to reach into a
+    // subcollection nested under a specific document, arbitrarily deep.
+    public static string SubCollectionPath(params string[] segments)
+    {
+        if (segments.Length == 0 || segments.Length % 2 == 0)
+        {
+            throw new ArgumentException(
+                "A collection path needs an odd number of segments (collection, doc, collection, doc, ...).",
+                nameof(segments));
+        }
+
+        return string.Join('/', segments);
+    }
+
     // Read a single document. Returns null if it doesn't exist.
     public async Task<T?> ReadAsync<T>(string collection, string documentId) where T : class
     {
@@ -32,6 +48,7 @@ public class FirebaseStroing(FirestoreDb firestoreDb)
     public async Task<string> WriteAsync<T>(string collection, T data) where T : class
     {
         var docRef = await firestoreDb.Collection(collection).AddAsync(data);
+
         return docRef.Id;
     }
 
